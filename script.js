@@ -9,11 +9,26 @@ let page = 1;
 
 async function searchImages() {
   keyword = searchBox.value;
-  const url = `https://api.unsplash.com/search/photos?page=${page}&query=${keyword}&client_id=${accessKey}`;
+  const url = `https://api.unsplash.com/search/photos?page=${page}&query=${keyword}&client_id=${accessKey}&per_page=12`;
 
   const response = await fetch(url);
   const data = await response.json();
-  console.log(data);
+  const results = data.results;
+
+  results.map((result) => {
+    // Create a new image element for each result from Unsplash
+    const image = document.createElement("img");
+    //This will put the image in the img tag
+    image.src = result.urls.small;
+    const imageLink = document.createElement("a");
+    imageLink.href = result.links.html;
+    imageLink.target = "_blank";
+
+    // Put the image inside the link so the image becomes clickable
+    imageLink.appendChild(image); 
+    //imageLink will be displayed in the search result
+    searchResult.appendChild(imageLink)
+  });
 }
 // Listen for when the search form is submitted, then run this function
 searchForm.addEventListener("submit", (e) => {
@@ -21,9 +36,10 @@ searchForm.addEventListener("submit", (e) => {
   This stops the form’s default behavior.
 
 By default, when you click a form’s submit button, the browser reloads the page and sends the form data through the URL. In your app, that would interrupt your JavaScript search.
-*/ 
-// So e.preventDefault() says: Don’t reload the page. Let my JavaScript handle the search instead
+*/
+  // So e.preventDefault() says: Don’t reload the page. Let my JavaScript handle the search instead
   e.preventDefault();
+  //Everytime we add a new keyword the page will be one
   page = 1;
   searchImages();
 });
