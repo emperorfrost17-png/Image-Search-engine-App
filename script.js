@@ -13,6 +13,11 @@ async function searchImages() {
 
   const response = await fetch(url);
   const data = await response.json();
+
+  if (page === 1) {
+    searchResult.innerHTML = "";
+  }
+
   const results = data.results;
 
   results.map((result) => {
@@ -25,10 +30,11 @@ async function searchImages() {
     imageLink.target = "_blank";
 
     // Put the image inside the link so the image becomes clickable
-    imageLink.appendChild(image); 
+    imageLink.appendChild(image);
     //imageLink will be displayed in the search result
-    searchResult.appendChild(imageLink)
+    searchResult.appendChild(imageLink);
   });
+  showMoreBtn.style.display = "block";
 }
 // Listen for when the search form is submitted, then run this function
 searchForm.addEventListener("submit", (e) => {
@@ -41,5 +47,9 @@ By default, when you click a form’s submit button, the browser reloads the pag
   e.preventDefault();
   //Everytime we add a new keyword the page will be one
   page = 1;
+  searchImages();
+});
+showMoreBtn.addEventListener("click", () => {
+  page++;
   searchImages();
 });
